@@ -2,6 +2,10 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { ProductComponent } from './components/product/product.component';
 import { CartComponent } from './components/cart/cart.component';
+import { FavoriteComponent } from './components/favorite/favorite.component';
+import { RegisterComponent } from './components/register/register.component';
+import { LoginComponent } from './components/login/login.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 export const routes: Routes = [
     {
@@ -25,12 +29,24 @@ export const routes: Routes = [
         component: CartComponent,
     },
     {
-        path: 'stock',
-
+        path: 'favorite',
+        title: 'Favorite',
+        component: FavoriteComponent,
     },
     {
-        path: 'event',
-
+        path: 'register',
+        title: 'Register',
+        component: RegisterComponent
+    },
+    {
+        path: 'login',
+        title: 'Login',
+        component: LoginComponent
+    },
+    {
+        path: 'profile',
+        title: 'Profile',
+        component: ProfileComponent
     },
     {
         path: '**',
