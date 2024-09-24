@@ -6,6 +6,8 @@ import { FavoriteComponent } from './components/favorite/favorite.component';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { CategoryComponent } from './components/category/category.component';
+import { UserComponent } from './components/user/user.component';
 
 export const routes: Routes = [
     {
@@ -22,6 +24,16 @@ export const routes: Routes = [
         path: 'product',
         title: 'Product',
         component: ProductComponent,
+    },
+    {
+        path: 'category',
+        title: 'Category',
+        component: CategoryComponent,
+    },
+    {
+        path: 'user',
+        title: 'User',
+        component: UserComponent,
     },
     {
         path: 'cart',
@@ -50,6 +62,6 @@ export const routes: Routes = [
     },
     {
         path: '**',
-        redirectTo: 'login',
+        redirectTo: 'home',
     }
 ];
