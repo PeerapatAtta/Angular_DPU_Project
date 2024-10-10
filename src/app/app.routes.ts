@@ -21,20 +21,16 @@ export const routes: Routes = [
         component: HomeComponent,
     },    
     {
-        path: 'product',
-        children: [
-            {
-                path: 'list',
-                title: 'Product List',
-                component: ProductListComponent,
-            },
-        ]
-    },
-    {
+        path: 'product-list',
+        title: 'product-list',
+        component: ProductListComponent,
+    },  
+     {
         path: 'category',
-        title: 'Category',
+        title: 'category',
         component: CategoryComponent,
-    },
+    },   
+     
     {
         path: 'user',
         title: 'User',
