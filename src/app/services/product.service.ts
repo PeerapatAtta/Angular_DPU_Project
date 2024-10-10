@@ -1,93 +1,64 @@
-import { Injectable, inject } from '@angular/core'
-import { CookieService } from 'ngx-cookie-service'
-import { HttpClient, HttpHeaders } from '@angular/common/http'
-import { Observable } from 'rxjs'
-import { environment } from '../../environments/environment'
-import { ProductCreateUpdateModel, ProductModel } from '../models/product.model'
+import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { ProductDto } from '../dtos/product.dto';
+import { environment } from '../../environments/environment.development';
+import { ProductDetailDTO } from '../dtos/product-detail.dto';
+import { CreateProductDto } from '../dtos/create-product.dto';
+import { EditProductDto } from '../dtos/edit-product.dto';
+import { PagingDto } from '../dtos/paging.dto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
+  constructor(private http: HttpClient) { }
 
-  private apiURL = environment.dotnet_api_url
-  private http = inject(HttpClient)
-  private cookieService = inject(CookieService)
-
-  // Read token from cookie
-  token = this.cookieService.get("LoggedInToken") || ""
-
-  // Header for GET, DELETE
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer ' + this.token
-    })
-  }
-
-  // Header for POST, PUT
-  httpOptionsPost = {
-    headers: new HttpHeaders({
-      'Authorization': 'Bearer ' + this.token
-    })
-  }
-
-  // Get All Products by parameter (page: number, limit: number, selectedCategory: string, searchQuery: string)
-  getAllProducts(
-    page: number,
-    limit: number,
-    selectedCategory: string,
-    searchQuery: string
-  ): Observable<ProductModel> {
-    let url = this.apiURL + 'Product?page=' + page + '&limit=' + limit
-
-    if (selectedCategory) {
-      url += '&selectedCategory=' + selectedCategory
+  getProducts(pageIndex: number, pageSize: number, onlyMyItem: boolean, keyword: string) {
+    let reqUrl = environment.apiBaseUrl + '/products';
+    reqUrl += '?pageIndex=' + pageIndex;
+    reqUrl += '&pageSize=' + pageSize;
+    reqUrl += '&onlyMyItem=' + onlyMyItem;
+    if (keyword) {
+      reqUrl += '&keyword=' + encodeURIComponent(keyword);
     }
+    return this.http.get<PagingDto<ProductDto>>(reqUrl);
+  }
 
-    if (searchQuery) {
-      url += '&searchQuery=' + searchQuery
+  getProduct(id: string) {
+    let reqUrl = environment.apiBaseUrl + '/products/' + id;
+    return this.http.get<ProductDetailDTO>(reqUrl);
+  }
+
+  createProduct(req: CreateProductDto) {
+    const formData = new FormData();
+    formData.append('name', req.name);
+    formData.append('price', req.price.toString());
+    if (req.description) {
+      formData.append('description', req.description);
     }
-
-    return this.http.get<ProductModel>(
-      url,
-      this.httpOptions
-    )
+    if (req.image) {
+      formData.append('image', req.image, req.image.name);
+    }
+    let reqUrl = environment.apiBaseUrl + '/products';
+    return this.http.post<ProductDetailDTO>(reqUrl, formData);
   }
 
-  // Get Product By ID
-  getProductById(id: number): Observable<ProductModel> {
-    return this.http.get<ProductModel>(
-      this.apiURL + 'Product/' + id,
-      this.httpOptions
-    )
+  editProduct(id: string, req: EditProductDto) {
+    const formData = new FormData();
+    formData.append('name', req.name);
+    formData.append('price', req.price.toString());
+    if (req.description) {
+      formData.append('description', req.description);
+    }
+    if (req.image) {
+      formData.append('image', req.image, req.image.name);
+    }
+    let reqUrl = environment.apiBaseUrl + '/products/' + id;
+    return this.http.put<unknown>(reqUrl, formData);
   }
 
-  // Create Product
-  createProduct(product: ProductCreateUpdateModel): Observable<ProductCreateUpdateModel> {
-    return this.http.post<ProductCreateUpdateModel>(
-      this.apiURL + 'Product',
-      product,
-      this.httpOptionsPost
-    )
+  deleteProduct(id: string) {
+    let reqUrl = environment.apiBaseUrl + '/products/' + id;
+    return this.http.delete<unknown>(reqUrl);
   }
-
-  // Update Product
-  updateProduct(id: number, product: ProductCreateUpdateModel): Observable<ProductCreateUpdateModel> {
-    return this.http.put<ProductCreateUpdateModel>(
-      this.apiURL + 'Product/' + id,
-      product,
-      this.httpOptionsPost
-    )
-  }
-
-  // Delete Product
-  deleteProduct(id: number): Observable<unknown> {
-    return this.http.delete<unknown>(
-      this.apiURL + 'Product/' + id,
-      this.httpOptions
-    )
-  }
-
 }
