@@ -8,6 +8,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { CategoryComponent } from './components/category/category.component';
 import { UserComponent } from './components/user/user.component';
 import { ProductListComponent } from './components/product-list/product-list.component';
+import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 
 export const routes: Routes = [
     {
@@ -19,7 +20,7 @@ export const routes: Routes = [
         path: 'home',
         title: 'Home',
         component: HomeComponent,
-    },    
+    },
     {
         path: 'product',
         title: 'product',
@@ -28,15 +29,20 @@ export const routes: Routes = [
                 path: 'list',
                 title: 'product list',
                 component: ProductListComponent
+            },
+            {
+                path: ':id/detail',
+                title: 'Product Detail',
+                component: ProductDetailComponent,
             }
         ]
-    },  
-     {
+    },
+    {
         path: 'category',
         title: 'category',
         component: CategoryComponent,
-    },   
-     
+    },
+
     {
         path: 'user',
         title: 'User',

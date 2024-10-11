@@ -3,6 +3,7 @@ import { ProductDto } from '../../dtos/product.dto';
 import { ProductService } from '../../services/product.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
@@ -22,7 +23,10 @@ export class ProductListComponent {
   loading = false;
 
   //DI
-  constructor(private productService: ProductService) { }
+  constructor(
+    private productService: ProductService,
+    private router: Router
+  ) { }
 
   //Methods
   ngOnInit(): void {
@@ -51,9 +55,9 @@ export class ProductListComponent {
     });
   }
 
-  viewItem(item: ProductDto) {
+  productDetail(item: ProductDto) {
     console.log('Product Details:', item);
-    // this.router.navigate(['/product/' + item.id + '/detail']);
+    this.router.navigate(['/product/' + item.id + '/detail']);
   }
 
   addProduct() {

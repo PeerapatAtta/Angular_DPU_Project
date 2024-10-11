@@ -22,7 +22,7 @@
                 <td>{{ product.price | currency: 'THB':'symbol-narrow' }}</td>
                 <td>
                     <!-- ปุ่มแก้ไข และ ปุ่มลบ -->
-                    <button class="btn btn-info btn-sm me-2" (click)="viewItem(product)">
+                    <button class="btn btn-info btn-sm me-2" (click)="productDetail(product)">
                         <i class="bi bi-eye"></i> Detail
                     </button>
                     <button class="btn btn-warning btn-sm me-2" (click)="editProduct(product)">
