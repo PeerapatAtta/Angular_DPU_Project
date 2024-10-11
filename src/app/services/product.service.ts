@@ -12,7 +12,8 @@ export class ProductService {
 
   getProducts() {
     let reqUrl = environment.apiBaseUrl + '/products';
-    return this.http.get<ProductDto>(reqUrl);
+    console.log('reqUrl: ', reqUrl);
+    return this.http.get<ProductDto[]>(reqUrl);
   }
-  
+
 }
