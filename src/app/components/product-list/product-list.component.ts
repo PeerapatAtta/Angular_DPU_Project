@@ -61,8 +61,9 @@ export class ProductListComponent {
   }
 
   addProduct() {
-    throw new Error('Method not implemented.');
+    this.router.navigate(['/product/add']);
   }
+
   deleteProduct(arg0: string) {
     throw new Error('Method not implemented.');
   }

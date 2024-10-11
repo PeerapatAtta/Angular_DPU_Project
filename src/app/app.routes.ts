@@ -9,6 +9,7 @@ import { CategoryComponent } from './components/category/category.component';
 import { UserComponent } from './components/user/user.component';
 import { ProductListComponent } from './components/product-list/product-list.component';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
+import { ProductAddComponent } from './components/product-add/product-add.component';
 
 export const routes: Routes = [
     {
@@ -34,6 +35,11 @@ export const routes: Routes = [
                 path: ':id/detail',
                 title: 'Product Detail',
                 component: ProductDetailComponent,
+            },
+            {
+                path: 'add',
+                title: 'Add Product',
+                component: ProductAddComponent,
             }
         ]
     },
