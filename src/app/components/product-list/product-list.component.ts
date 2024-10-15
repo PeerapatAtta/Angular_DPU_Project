@@ -4,6 +4,7 @@ import { ProductService } from '../../services/product.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { ProductEditDto } from '../../dtos/product-edit.dto';
 
 @Component({
   selector: 'app-product-list',
@@ -64,12 +65,15 @@ export class ProductListComponent {
     this.router.navigate(['/product/add']);
   }
 
+  editProduct(item: ProductDto) {
+    console.log('Product Edit:', item);
+    this.router.navigate(['/product/' + item.id + '/edit']);
+  }
+
   deleteProduct(arg0: string) {
     throw new Error('Method not implemented.');
   }
 
-  editProduct(_t12: ProductDto) {
-    throw new Error('Method not implemented.');
-  }
+
 
 }

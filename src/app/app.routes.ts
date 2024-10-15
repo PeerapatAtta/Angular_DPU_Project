@@ -10,6 +10,7 @@ import { UserComponent } from './components/user/user.component';
 import { ProductListComponent } from './components/product-list/product-list.component';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 import { ProductAddComponent } from './components/product-add/product-add.component';
+import { ProductEditComponent } from './components/product-edit/product-edit.component';
 
 export const routes: Routes = [
     {
@@ -40,6 +41,12 @@ export const routes: Routes = [
                 path: 'add',
                 title: 'Add Product',
                 component: ProductAddComponent,
+            },
+            {
+                path: ':id/edit',
+                title: 'Edit Product',
+                component: ProductEditComponent,
+                //canActivate: [authGuard, sellerGuard]
             }
         ]
     },
