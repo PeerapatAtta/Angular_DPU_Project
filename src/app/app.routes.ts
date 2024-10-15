@@ -11,6 +11,7 @@ import { ProductListComponent } from './components/product-list/product-list.com
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 import { ProductAddComponent } from './components/product-add/product-add.component';
 import { ProductEditComponent } from './components/product-edit/product-edit.component';
+import { ProductDeleteComponent } from './components/product-delete/product-delete.component';
 
 export const routes: Routes = [
     {
@@ -47,7 +48,14 @@ export const routes: Routes = [
                 title: 'Edit Product',
                 component: ProductEditComponent,
                 //canActivate: [authGuard, sellerGuard]
-            }
+            },
+            {
+                path: ':id/delete',
+                title: 'Delete Product',
+                component: ProductDeleteComponent,
+                //canActivate: [authGuard, sellerGuard]
+            },
+
         ]
     },
     {

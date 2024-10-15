@@ -70,8 +70,9 @@ export class ProductListComponent {
     this.router.navigate(['/product/' + item.id + '/edit']);
   }
 
-  deleteProduct(arg0: string) {
-    throw new Error('Method not implemented.');
+  deleteProduct(item: ProductDto) {
+    console.log('Product Delete:', item);
+    this.router.navigate(['/product/' + item.id + '/delete']);
   }
 
 

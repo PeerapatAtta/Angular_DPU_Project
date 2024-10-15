@@ -35,4 +35,9 @@ export class ProductService {
     return this.http.put<ProductEditDto>(reqUrl, product);
   }
 
+  deleteProduct(id: string) {
+    let reqUrl = environment.apiBaseUrl + '/products/' + id;
+    return this.http.delete(reqUrl);
+  }
+
 }
