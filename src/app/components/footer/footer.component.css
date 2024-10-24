@@ -4,3 +4,6 @@ p {
 a {
     color: white !important;
 }
+footer {
+    z-index: 1;
+}

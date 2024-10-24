@@ -12,13 +12,9 @@ import { ProductDetailComponent } from './components/product-detail/product-deta
 import { ProductAddComponent } from './components/product-add/product-add.component';
 import { ProductEditComponent } from './components/product-edit/product-edit.component';
 import { ProductDeleteComponent } from './components/product-delete/product-delete.component';
+import { AccountLoginUserComponent } from './components/account-login-user/account-login-user.component';
 
 export const routes: Routes = [
-    {
-        path: '',
-        pathMatch: 'full',
-        redirectTo: 'home',
-    },
     {
         path: 'home',
         title: 'Home',
@@ -59,6 +55,16 @@ export const routes: Routes = [
         ]
     },
     {
+        path: 'account',
+        children: [
+            {
+                path: 'login',
+                title: 'Login',
+                component: AccountLoginUserComponent
+            },
+        ]
+    },
+    {
         path: 'category',
         title: 'category',
         component: CategoryComponent,
@@ -95,7 +101,12 @@ export const routes: Routes = [
         component: ProfileComponent
     },
     {
-        path: '**',
+        path: '', // default route คือ การกำหนด route ที่จะแสดงเมื่อไม่มีการระบุ path ใดๆ
+        pathMatch: 'full', // pathMatch: 'full' คือ การกำหนดว่า path นี้จะต้องตรงกับ path ที่ระบุใน path ทั้งหมด
+        redirectTo: 'home',
+    },
+    {
+        path: '**', // wildcard route คือ การกำหนด route ที่ไม่มีในรายการ route ทั้งหมด
         redirectTo: 'home',
     }
 ];
