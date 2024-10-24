@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { CartComponent } from './components/cart/cart.component';
 import { FavoriteComponent } from './components/favorite/favorite.component';
-import { RegisterComponent } from './components/register/register.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { CategoryComponent } from './components/category/category.component';
 import { UserComponent } from './components/user/user.component';
@@ -12,6 +11,7 @@ import { ProductAddComponent } from './components/product-add/product-add.compon
 import { ProductEditComponent } from './components/product-edit/product-edit.component';
 import { ProductDeleteComponent } from './components/product-delete/product-delete.component';
 import { AccountLoginUserComponent } from './components/account-login-user/account-login-user.component';
+import { AccountRegisterUserComponent } from './components/account-register-user/account-register-user.component';
 
 export const routes: Routes = [
     {
@@ -61,6 +61,11 @@ export const routes: Routes = [
                 title: 'Login',
                 component: AccountLoginUserComponent
             },
+            {
+                path: 'register',
+                title: 'Register',
+                component: AccountRegisterUserComponent
+            },
         ]
     },
     {
@@ -83,11 +88,6 @@ export const routes: Routes = [
         path: 'favorite',
         title: 'Favorite',
         component: FavoriteComponent,
-    },
-    {
-        path: 'register',
-        title: 'Register',
-        component: RegisterComponent
     },
     {
         path: 'profile',
