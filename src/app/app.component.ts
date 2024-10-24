@@ -2,13 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from "./components/header/header.component";
 import { FooterComponent } from "./components/footer/footer.component";
+import { AccountService } from './services/account.service';
 
 //PrimeNG Modules
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService, PrimeNGConfig } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { AccountService } from './services/account.service';
-
 
 @Component({
   selector: 'app-root',
@@ -32,11 +31,19 @@ export class AppComponent implements OnInit {
 
   // The title property is a string value that represents the title of the application.
   title = 'WebApp';
-  
-  // The constructor method injects the PrimeNGConfig service and the AccountService service.
-  constructor(private primengConfig: PrimeNGConfig, private accountService: AccountService) { }
+
+  // Constructor with dependency injection
+  constructor(
+    private primengConfig: PrimeNGConfig, // Inject the PrimeNGConfig service to enable the ripple effect globally
+    private accountService: AccountService // Inject the AccountService to check if the user is authenticated
+  ) { }
 
   async ngOnInit() {
-    this.primengConfig.ripple = true; // The ripple property of the PrimeNGConfig service is set to true to enable the ripple effect.
+    // Enable the ripple effect globally
+    this.primengConfig.ripple = true; // ripple effect คือ การทำให้ปุ่มมีเอฟเฟคเมื่อคลิก 
+
+    const res = await this.accountService.isUserAuthenticated(); // Check if the user is authenticated
+
+    this.accountService.notifyAuthChange(res); // Notify the app component of the authentication status
   }
 }

@@ -1,18 +1,23 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'
 import { JwtModule } from '@auth0/angular-jwt';
 import { authKey } from './services/account.service';
 import { environment } from '../environments/environment.development';
+import { errorInterceptor } from './interceptors/error.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     
     provideRouter(routes), // To provide the routes for the application.
 
-    provideHttpClient(), // For the HttpClient module to make HTTP requests. 
+    // Provide the HttpClient with interceptors
+    provideHttpClient(
+      withInterceptors([errorInterceptor]), // Add the error interceptor
+      withInterceptorsFromDi() // Add interceptors from DI
+    ),
 
     provideAnimationsAsync(), // To enable animations in the application.
 
