@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AccountService, authKey } from '../../services/account.service';
 import { LoginUserDto } from '../../dtos/login-user.dto';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -31,24 +31,30 @@ import { PasswordModule } from 'primeng/password';
 export class AccountLoginUserComponent implements OnInit {
 
   //  Properties
+  returnUrl = ''; // The returnUrl property is a string that stores the URL to which the user will be redirected after logging in.
   loginForm!: FormGroup; // The loginForm property is a FormGroup instance that contains two FormControl instances: email and password.
   isProcessing = false; // The isProcessing property is a boolean value that indicates whether the form is being processed.
 
-  // Constructor
+  // Constructor with dependency injection
   constructor(
     private router: Router, // The Router service is injected to navigate to other components.
+    private route: ActivatedRoute, // to access the route query parameters.
     private messageService: MessageService, // The MessageService service is injected to display messages.
     private accountService: AccountService // The AccountService service is injected to log in the user.
   ) { }
 
-  // The ngOnInit method initializes the loginForm property with two FormControl instances: email and password. 
+  // Method to initialize the component
   ngOnInit(): void {
+
+    // Get the return URL from the route query parameters or set it to the root URL
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
 
     // The loginForm property is initialized with two FormControl instances: email and password.
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]), // The email FormControl instance is initialized with the required and email validators.
       password: new FormControl('', [Validators.required]), // The password FormControl instance is initialized with the required validator.
     });
+
   }
 
   // The validateControl method checks if a control is invalid and has been touched.
@@ -63,18 +69,18 @@ export class AccountLoginUserComponent implements OnInit {
     return control?.hasError(errorName); // The method returns true if the control has the specified error; otherwise, it returns false.
   }
 
-  // The loginUser method sends a POST request to the server to log in the user.
+  // method to handle the login form
   loginUser() {
 
-    // Convert loginForm values to LoginUserDto
+    // Convert loginForm values to LoginUserDto to send to the server.
     const req: LoginUserDto = {
-      email: this.loginForm.get('email')?.value, // The email property is assigned the value of the email control.
-      password: this.loginForm.get('password')?.value, // The password property is assigned the value of the password control.
+      email: this.loginForm.get('email')?.value, // get the email value from the form
+      password: this.loginForm.get('password')?.value, // // get the password value from the form
     };
 
-    this.loginForm.disable();
-    this.isProcessing = true;
-    this.messageService.clear();
+    this.loginForm.disable(); // Disable the login form to prevent multiple submissions.
+    this.isProcessing = true; // Set the isProcessing property to true to indicate that the form is being processed.
+    this.messageService.clear(); // Clear any messages displayed on the screen.
 
     // Call the login method of the accountService service to log in the user.
     this.accountService.login(req).subscribe({
@@ -83,6 +89,8 @@ export class AccountLoginUserComponent implements OnInit {
         localStorage.setItem(authKey.accessToken, res.accessToken!); // Store the access token in the local storage.
         localStorage.setItem(authKey.refreshToken, res.refreshToken!); // Store the refresh token in the local storage.
 
+        this.accountService.notifyAuthChange(true); // notify other components about the authentication change
+
         // Display a success message if the server returns a successful response.
         this.messageService.add({
           severity: 'success', // Massages with severity success will be displayed in green.
@@ -90,7 +98,10 @@ export class AccountLoginUserComponent implements OnInit {
           detail: 'Nice to see you.' // The detail property is assigned the 'Nice to see you.' message.
         });
 
-        this.router.navigate(['/']); // Navigate to the home page after the user logs in.
+        // navigate to the return URL after a delay
+        setTimeout(() => {
+          this.router.navigate([this.returnUrl]);
+        }, 1500);
       },
       // The error callback is called when the server returns an error response.
       error: (err: HttpErrorResponse) => {
@@ -99,7 +110,7 @@ export class AccountLoginUserComponent implements OnInit {
         this.messageService.add({
           severity: 'error', // Massages with severity error will be displayed in red.
           summary: 'Login Failed', // The summary property is assigned the 'Login Failed' message.
-          detail: err.error.errors[0], // The detail property is assigned the error message returned by the server.
+          detail: err.message, // show the error message from the server to the user 
           sticky: true // The sticky property is set to true to keep the message displayed until the user closes it.
         });
 

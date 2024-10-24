@@ -24,7 +24,7 @@
                 <a routerLink="favorite" class="text-white me-3">
                     <i class="bi bi-heart" style="font-size: 1.5rem;"></i>
                 </a>
-                @if (isUserLoggedIn) {
+                @if (isUserAuthenticated) {
                 <button type="button" class="btn btn-danger mx-2" (click)="logout()">Logout</button>
                 }
                 @else{
