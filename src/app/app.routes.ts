@@ -12,6 +12,9 @@ import { ProductEditComponent } from './components/product-edit/product-edit.com
 import { ProductDeleteComponent } from './components/product-delete/product-delete.component';
 import { AccountLoginUserComponent } from './components/account-login-user/account-login-user.component';
 import { AccountRegisterUserComponent } from './components/account-register-user/account-register-user.component';
+import { authGuard } from './guards/auth.guard';
+import { sellerGuard } from './guards/seller.guard';
+import { AccountForgotPasswordComponent } from './components/account-forgot-password/account-forgot-password.component';
 
 export const routes: Routes = [
     {
@@ -26,31 +29,33 @@ export const routes: Routes = [
             {
                 path: 'list',
                 title: 'product list',
-                component: ProductListComponent
+                component: ProductListComponent,
+                canActivate: [authGuard]
             },
             {
                 path: ':id/detail',
                 title: 'Product Detail',
                 component: ProductDetailComponent,
+                canActivate: [authGuard]
             },
             {
                 path: 'add',
                 title: 'Add Product',
                 component: ProductAddComponent,
+                canActivate: [authGuard, sellerGuard]
             },
             {
                 path: ':id/edit',
                 title: 'Edit Product',
                 component: ProductEditComponent,
-                //canActivate: [authGuard, sellerGuard]
+                canActivate: [authGuard, sellerGuard]
             },
             {
                 path: ':id/delete',
                 title: 'Delete Product',
                 component: ProductDeleteComponent,
-                //canActivate: [authGuard, sellerGuard]
+                canActivate: [authGuard, sellerGuard]
             },
-
         ]
     },
     {
@@ -65,6 +70,11 @@ export const routes: Routes = [
                 path: 'register',
                 title: 'Register',
                 component: AccountRegisterUserComponent
+            },
+            {
+                path: 'forgotpassword',
+                title: 'Forgot Password',
+                component: AccountForgotPasswordComponent
             },
         ]
     },
