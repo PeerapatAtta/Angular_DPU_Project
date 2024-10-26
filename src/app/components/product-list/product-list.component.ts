@@ -5,6 +5,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FavoriteService } from '../../services/favorite.service';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-product-list',
@@ -23,7 +24,8 @@ export class ProductListComponent implements OnInit {
     private productService: ProductService,
     private router: Router,
     private favoriteService: FavoriteService,  // Inject FavoriteService
-  ) {}
+    private cartService: CartService  // Inject CartService
+  ) { }
 
   ngOnInit(): void {
     this.getProducts();
@@ -97,4 +99,12 @@ export class ProductListComponent implements OnInit {
       }
     });
   }
+
+  addToCart(product: ProductDTO): void {
+    this.cartService.addToCart({ productId: product.id, quantity: 1 }).subscribe({
+      next: () => console.log('Added to cart successfully!'),
+      error: (err) => console.error('Error adding to cart:', err)
+    });
+  }
+
 }

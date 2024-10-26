@@ -1,0 +1,53 @@
+<!-- Cart Page -->
+<div class="container mt-4">
+    <h2>ตะกร้าสินค้า</h2>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+    <!-- Cart Table -->
+    <div *ngIf="cartItems.length > 0; else noItems">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ชื่อสินค้า</th>
+                    <th>ราคา (THB)</th>
+                    <th>จำนวน</th>
+                    <th>ราคารวม</th>
+                    <th>จัดการ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of cartItems">
+                    <td>{{ item.productName }}</td>
+                    <td>{{ item.price | currency: 'THB':'symbol-narrow' }}</td>
+                    <td>
+                        <!-- Update Quantity -->
+                        <input type="number" class="form-control form-control-sm" [(ngModel)]="item.quantity"
+                            (change)="updateQuantity(item, item.quantity)" min="1" />
+                    </td>
+                    <td>{{ item.totalPrice | currency: 'THB':'symbol-narrow' }}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" (click)="removeItem(item.productId)">
+                            <i class="bi bi-trash"></i> ลบ
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Cart Summary -->
+        <div class="text-end mt-4">
+            <h4>ยอดรวมทั้งหมด: {{ totalAmount | currency: 'THB':'symbol-narrow' }}</h4>
+            <button class="btn btn-primary mt-2">ไปที่ชำระเงิน</button>
+        </div>
+
+        <!-- Clear Cart Button -->
+        <button class="btn btn-warning mt-3" (click)="clearCart()">ลบสินค้าออกจากตะกร้าทั้งหมด</button>
+    </div>
+
+    <!-- No Items Message -->
+    <ng-template #noItems>
+        <div class="alert alert-info text-center">ไม่มีสินค้าในตะกร้าของคุณ</div>
+    </ng-template>
+</div>
