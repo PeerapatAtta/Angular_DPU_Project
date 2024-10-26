@@ -3,7 +3,6 @@ import { HomeComponent } from './components/home/home.component';
 import { CartComponent } from './components/cart/cart.component';
 import { FavoriteComponent } from './components/favorite/favorite.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { CategoryComponent } from './components/category/category.component';
 import { UserComponent } from './components/user/user.component';
 import { ProductListComponent } from './components/product-list/product-list.component';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
@@ -16,7 +15,13 @@ import { authGuard } from './guards/auth.guard';
 import { sellerGuard } from './guards/seller.guard';
 import { AccountForgotPasswordComponent } from './components/account-forgot-password/account-forgot-password.component';
 import { AccountResetPasswordComponent } from './components/account-reset-password/account-reset-password.component';
-import { CatalogListComponent } from './components/catalog-list/catalog-list.component';
+import { CategoryDetailComponent } from './components/category-detail/category-detail.component';
+import { CategoryAddComponent } from './components/category-add/category-add.component';
+import { CategoryEditComponent } from './components/category-edit/category-edit.component';
+import { CategoryDeleteComponent } from './components/category-delete/category-delete.component';
+import { CategoryListComponent } from './components/category-list/category-list.component';
+import { ForbiddenComponent } from './components/forbidden/forbidden.component';
+
 
 export const routes: Routes = [
     {
@@ -26,38 +31,38 @@ export const routes: Routes = [
     },
     {
         path: 'category',
-        title: 'category',
+        title: 'Category',
         children: [
             {
                 path: 'list',
-                title: 'category list',
-                component: CatalogListComponent,
+                title: 'Category list',
+                component: CategoryListComponent,
                 canActivate: [authGuard]
             },
-            // {
-            //     path: ':id/detail',
-            //     title: 'Product Detail',
-            //     component: ProductDetailComponent,
-            //     canActivate: [authGuard]
-            // },
-            // {
-            //     path: 'add',
-            //     title: 'Add Product',
-            //     component: ProductAddComponent,
-            //     canActivate: [authGuard, sellerGuard]
-            // },
-            // {
-            //     path: ':id/edit',
-            //     title: 'Edit Product',
-            //     component: ProductEditComponent,
-            //     canActivate: [authGuard, sellerGuard]
-            // },
-            // {
-            //     path: ':id/delete',
-            //     title: 'Delete Product',
-            //     component: ProductDeleteComponent,
-            //     canActivate: [authGuard, sellerGuard]
-            // },
+            {
+                path: ':id/detail',
+                title: 'Category Detail',
+                component: CategoryDetailComponent,
+                canActivate: [authGuard]
+            },
+            {
+                path: 'add',
+                title: 'Add Category',
+                component: CategoryAddComponent,
+                canActivate: [authGuard]
+            },
+            {
+                path: ':id/edit',
+                title: 'Edit Category',
+                component: CategoryEditComponent,
+                // canActivate: [authGuard, sellerGuard]
+            },
+            {
+                path: ':id/delete',
+                title: 'Delete Category',
+                component: CategoryDeleteComponent,
+                canActivate: [authGuard]
+            },
         ]
     },
     {
@@ -80,19 +85,19 @@ export const routes: Routes = [
                 path: 'add',
                 title: 'Add Product',
                 component: ProductAddComponent,
-                canActivate: [authGuard, sellerGuard]
+                canActivate: [authGuard]
             },
             {
                 path: ':id/edit',
                 title: 'Edit Product',
                 component: ProductEditComponent,
-                canActivate: [authGuard, sellerGuard]
+                canActivate: [authGuard]
             },
             {
                 path: ':id/delete',
                 title: 'Delete Product',
                 component: ProductDeleteComponent,
-                canActivate: [authGuard, sellerGuard]
+                canActivate: [authGuard]
             },
         ]
     },
@@ -122,12 +127,6 @@ export const routes: Routes = [
         ]
     },
     {
-        path: 'category',
-        title: 'category',
-        component: CategoryComponent,
-    },
-
-    {
         path: 'user',
         title: 'User',
         component: UserComponent,
@@ -146,6 +145,10 @@ export const routes: Routes = [
         path: 'profile',
         title: 'Profile',
         component: ProfileComponent
+    },
+    {
+        path: 'forbidden',
+        component: ForbiddenComponent
     },
     {
         path: '', // default route คือ การกำหนด route ที่จะแสดงเมื่อไม่มีการระบุ path ใดๆ

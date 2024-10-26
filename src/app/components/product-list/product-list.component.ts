@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ProductDto } from '../../dtos/product.dto';
+import { ProductDTO } from '../../dtos/product.dto';
 import { ProductService } from '../../services/product.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -16,11 +16,9 @@ import { ProductEditDto } from '../../dtos/product-edit.dto';
 
 export class ProductListComponent {
 
-
-
   //Properies
   cols!: unknown[];
-  products!: ProductDto[];
+  products!: ProductDTO[];
   loading = false;
 
   //DI
@@ -45,7 +43,7 @@ export class ProductListComponent {
     this.loading = true;
 
     this.productService.getProducts().subscribe({
-      next: (res: ProductDto[]) => {
+      next: (res: ProductDTO[]) => {
         this.products = res;
         this.loading = false;
       },
@@ -56,7 +54,7 @@ export class ProductListComponent {
     });
   }
 
-  productDetail(item: ProductDto) {
+  productDetail(item: ProductDTO) {
     console.log('Product Details:', item);
     this.router.navigate(['/product/' + item.id + '/detail']);
   }
@@ -65,12 +63,12 @@ export class ProductListComponent {
     this.router.navigate(['/product/add']);
   }
 
-  editProduct(item: ProductDto) {
+  editProduct(item: ProductDTO) {
     console.log('Product Edit:', item);
     this.router.navigate(['/product/' + item.id + '/edit']);
   }
 
-  deleteProduct(item: ProductDto) {
+  deleteProduct(item: ProductDTO) {
     console.log('Product Delete:', item);
     this.router.navigate(['/product/' + item.id + '/delete']);
   }

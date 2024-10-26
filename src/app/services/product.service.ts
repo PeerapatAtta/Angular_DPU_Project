@@ -1,8 +1,7 @@
-//ProductService.ts//
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
-import { ProductDto } from '../dtos/product.dto';
+import { ProductDTO } from '../dtos/product.dto';
 import { ProductDetailDTO } from '../dtos/product-detail.dto';
 import { ProductAddDto } from '../dtos/product-add.dto';
 import { Observable } from 'rxjs';
@@ -13,31 +12,39 @@ import { ProductEditDto } from '../dtos/product-edit.dto';
 })
 export class ProductService {
 
+  private baseUrl = environment.apiBaseUrl + '/products';
+
   constructor(private http: HttpClient) { }
 
-  getProducts() {
-    let reqUrl = environment.apiBaseUrl + '/products';
-    return this.http.get<ProductDto[]>(reqUrl);
+  // Get all products
+  getProducts(): Observable<ProductDTO[]> {
+    return this.http.get<ProductDTO[]>(`${this.baseUrl}`);
   }
 
-  getProduct(id: string) {
-    let reqUrl = environment.apiBaseUrl + '/products/' + id;
-    return this.http.get<ProductDetailDTO>(reqUrl);
+  // Get a product by ID
+  getProduct(id: string): Observable<ProductDetailDTO> {
+    return this.http.get<ProductDetailDTO>(`${this.baseUrl}/${id}`);
   }
 
-  addProduct(product: ProductAddDto): Observable<ProductAddDto> {
-    let reqUrl = environment.apiBaseUrl + '/products';
-    return this.http.post<ProductAddDto>(reqUrl, product);
+  // Add a new product
+  addProduct(product: ProductAddDto): Observable<ProductDetailDTO> {
+    return this.http.post<ProductDetailDTO>(`${this.baseUrl}`, product);
   }
 
-  updateProduct(id: string, product: ProductEditDto): Observable<ProductEditDto> {
-    let reqUrl = environment.apiBaseUrl + '/products/' + id;
-    return this.http.put<ProductEditDto>(reqUrl, product);
+  // Update a product by ID
+  updateProduct(id: string, product: ProductEditDto): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/${id}`, product);
   }
 
-  deleteProduct(id: string) {
-    let reqUrl = environment.apiBaseUrl + '/products/' + id;
-    return this.http.delete(reqUrl);
+  // Delete a product by ID
+  deleteProduct(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 
+  // Search products by keyword
+  searchProducts(query: string): Observable<ProductDTO[]> {
+    return this.http.get<ProductDTO[]>(`${this.baseUrl}/search`, {
+      params: { query }
+    });
+  }
 }

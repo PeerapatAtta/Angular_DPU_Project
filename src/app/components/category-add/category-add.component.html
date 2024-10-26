@@ -1,0 +1,26 @@
+<div class="container mt-4">
+    <h2>Add New Category</h2>
+
+    <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+            <label for="name" class="form-label">Category Name</label>
+            <input id="name" type="text" class="form-control" formControlName="name"
+                [class.is-invalid]="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched">
+            <div *ngIf="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched"
+                class="invalid-feedback">
+                Category name is required and must be at least 3 characters.
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea id="description" class="form-control" formControlName="description"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" [disabled]="categoryForm.invalid || loading">
+            {{ loading ? 'Submitting...' : 'Submit' }}
+        </button>
+
+        <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+    </form>
+</div>
