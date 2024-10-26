@@ -15,12 +15,50 @@ import { AccountRegisterUserComponent } from './components/account-register-user
 import { authGuard } from './guards/auth.guard';
 import { sellerGuard } from './guards/seller.guard';
 import { AccountForgotPasswordComponent } from './components/account-forgot-password/account-forgot-password.component';
+import { AccountResetPasswordComponent } from './components/account-reset-password/account-reset-password.component';
+import { CatalogListComponent } from './components/catalog-list/catalog-list.component';
 
 export const routes: Routes = [
     {
         path: 'home',
         title: 'Home',
         component: HomeComponent,
+    },
+    {
+        path: 'category',
+        title: 'category',
+        children: [
+            {
+                path: 'list',
+                title: 'category list',
+                component: CatalogListComponent,
+                canActivate: [authGuard]
+            },
+            // {
+            //     path: ':id/detail',
+            //     title: 'Product Detail',
+            //     component: ProductDetailComponent,
+            //     canActivate: [authGuard]
+            // },
+            // {
+            //     path: 'add',
+            //     title: 'Add Product',
+            //     component: ProductAddComponent,
+            //     canActivate: [authGuard, sellerGuard]
+            // },
+            // {
+            //     path: ':id/edit',
+            //     title: 'Edit Product',
+            //     component: ProductEditComponent,
+            //     canActivate: [authGuard, sellerGuard]
+            // },
+            // {
+            //     path: ':id/delete',
+            //     title: 'Delete Product',
+            //     component: ProductDeleteComponent,
+            //     canActivate: [authGuard, sellerGuard]
+            // },
+        ]
     },
     {
         path: 'product',
@@ -76,6 +114,11 @@ export const routes: Routes = [
                 title: 'Forgot Password',
                 component: AccountForgotPasswordComponent
             },
+            {
+                path: 'resetpassword',
+                title: 'Reset Password',
+                component: AccountResetPasswordComponent
+            }
         ]
     },
     {
