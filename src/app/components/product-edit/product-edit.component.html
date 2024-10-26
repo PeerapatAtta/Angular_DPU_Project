@@ -26,10 +26,17 @@
             <textarea id="description" class="form-control" formControlName="description"></textarea>
         </div>
 
+        <div class="mb-3">
+            <label class="form-label">Category</label>
+            <div *ngFor="let catalog of catalogs">
+                <input type="radio" [value]="catalog.id" formControlName="catalogId"> {{ catalog.name }}
+            </div>
+        </div>
+
         <button type="submit" class="btn btn-primary m-3" [disabled]="productForm.invalid || loading">
             {{ loading ? 'Submitting...' : 'Update Product' }}
         </button>
-        
+
         <button class="btn btn-secondary" [routerLink]="['/product/list']">Cancel</button>
 
         <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>

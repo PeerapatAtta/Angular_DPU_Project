@@ -1,35 +1,33 @@
 <div class="container mt-4" *ngIf="!loading">
     <h2>Product Detail</h2>
-
+  
     <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
-
+  
     <div *ngIf="product">
-        <div class="card">
-            <div class="card-header">
-                <h3>{{ product.name }}</h3>
-            </div>
-            <div class="card-body">
-                <p><strong>ID:</strong> {{ product.id }}</p>
-                <p><strong>Price:</strong> {{ product.price | currency: 'THB':'symbol-narrow' }}</p>
-                <p><strong>Description:</strong> {{ product.description }}</p>
-            </div>
+      <div class="card">
+        <div class="card-header">
+          <h3>{{ product.name }}</h3>
         </div>
+        <div class="card-body">
+          <p><strong>ID:</strong> {{ product.id }}</p>
+          <p><strong>Price:</strong> {{ product.price | currency: 'THB':'symbol-narrow' }}</p>
+          <p><strong>Category:</strong> {{ product.catalogName }}</p> <!-- เพิ่มชื่อหมวดหมู่สินค้า -->
+          <p><strong>Description:</strong> {{ product.description }}</p>
+        </div>
+      </div>
     </div>
+  
     <!-- ปุ่มกลับไปที่หน้า Product List -->
     <div class="mt-4">
-        <button class="btn btn-secondary" [routerLink]="['/product/list']">
-            Back to Product List
-        </button>
+      <button class="btn btn-secondary" [routerLink]="['/product/list']">
+        Back to Product List
+      </button>
     </div>
-
-</div>
-
-
-
-
-
-<div *ngIf="loading" class="text-center mt-5">
+  </div>
+  
+  <div *ngIf="loading" class="text-center mt-5">
     <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
+      <span class="visually-hidden">Loading...</span>
     </div>
-</div>
+  </div>
+  

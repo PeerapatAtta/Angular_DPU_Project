@@ -1,35 +1,46 @@
 <div class="container mt-4">
     <h2>Add New Product</h2>
-
+  
     <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
-        <div class="mb-3">
-            <label for="name" class="form-label">Product Name</label>
-            <input id="name" type="text" class="form-control" formControlName="name"
-                [class.is-invalid]="productForm.get('name')?.invalid && productForm.get('name')?.touched">
-            <div *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched" class="invalid-feedback">
-                Product name is required and must be at least 3 characters.
-            </div>
+      <div class="mb-3">
+        <label for="name" class="form-label">Product Name</label>
+        <input id="name" type="text" class="form-control" formControlName="name"
+          [class.is-invalid]="productForm.get('name')?.invalid && productForm.get('name')?.touched">
+        <div *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched" class="invalid-feedback">
+          Product name is required and must be at least 3 characters.
         </div>
-
-        <div class="mb-3">
-            <label for="price" class="form-label">Price</label>
-            <input id="price" type="number" class="form-control" formControlName="price"
-                [class.is-invalid]="productForm.get('price')?.invalid && productForm.get('price')?.touched">
-            <div *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched"
-                class="invalid-feedback">
-                Price is required and must be a positive number.
-            </div>
+      </div>
+  
+      <div class="mb-3">
+        <label for="price" class="form-label">Price</label>
+        <input id="price" type="number" class="form-control" formControlName="price"
+          [class.is-invalid]="productForm.get('price')?.invalid && productForm.get('price')?.touched">
+        <div *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched" class="invalid-feedback">
+          Price is required and must be a positive number.
         </div>
-
-        <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <textarea id="description" class="form-control" formControlName="description"></textarea>
+      </div>
+  
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea id="description" class="form-control" formControlName="description"></textarea>
+      </div>
+  
+      <div class="mb-3">
+        <label class="form-label">Category</label>
+        <div *ngFor="let catalog of catalogs" class="form-check">
+          <input type="radio" class="form-check-input" [id]="catalog.id" [value]="catalog.id" formControlName="catalogId">
+          <label class="form-check-label" [for]="catalog.id">{{ catalog.name }}</label>
         </div>
-
-        <button type="submit" class="btn btn-primary" [disabled]="productForm.invalid || loading">
-            {{ loading ? 'Submitting...' : 'Submit' }}
-        </button>
-
-        <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+        <div *ngIf="productForm.get('catalogId')?.invalid && productForm.get('catalogId')?.touched" class="invalid-feedback d-block">
+          Please select a category.
+        </div>
+      </div>
+  
+      <button type="submit" class="btn btn-primary" [disabled]="productForm.invalid || loading">
+        {{ loading ? 'Submitting...' : 'Submit' }}
+      </button>
+  
+      <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
     </form>
-</div>
+  </div>
+  

@@ -13,23 +13,19 @@ import { HttpErrorResponse } from '@angular/common/http';
     RouterModule
   ],
   templateUrl: './product-detail.component.html',
-  styleUrl: './product-detail.component.css'
+  styleUrls: ['./product-detail.component.css']
 })
 
 export class ProductDetailComponent implements OnInit {
-
-  //Properties
   product!: ProductDetailDTO;
-  error!: string;
-  loading!: boolean;
-  errorMessage!: string;
+  errorMessage: string = '';
+  loading: boolean = true;
 
-  //DI
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private productService: ProductService,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.getProductDetail();
@@ -37,7 +33,7 @@ export class ProductDetailComponent implements OnInit {
 
   // ฟังก์ชันดึงข้อมูลสินค้า
   getProductDetail(): void {
-    const productId = this.route.snapshot.paramMap.get('id');  // ดึง ID จาก URL
+    const productId = this.route.snapshot.paramMap.get('id'); // ดึง ID จาก URL
 
     if (productId) {
       this.productService.getProduct(productId).subscribe({
@@ -54,8 +50,7 @@ export class ProductDetailComponent implements OnInit {
     }
   }
 
-  backClick() {
+  backClick(): void {
     this.router.navigate(['/product/list']);
   }
-
 }

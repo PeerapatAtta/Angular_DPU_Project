@@ -1,17 +1,21 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="mb-0">Product List</h2>
-        <!-- ปุ่มเพิ่มสินค้า จัดชิดขอบขวา -->
         <button class="btn btn-primary" (click)="addProduct()">Add Product</button>
     </div>
 
-    <!-- ตารางรายการสินค้า -->
-    <table class="table table-striped table-hover">
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+    <input type="text" class="form-control mb-3" placeholder="Search products..." #searchInput
+        (keyup.enter)="searchProducts(searchInput.value)" />
+
+    <table class="table table-striped table-hover" *ngIf="products.length > 0; else noProducts">
         <thead class="table-dark">
             <tr>
                 <th>ID</th>
                 <th>Name</th>
                 <th>Price (THB)</th>
+                <th>Category</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -20,8 +24,8 @@
                 <td>{{ product.id }}</td>
                 <td>{{ product.name }}</td>
                 <td>{{ product.price | currency: 'THB':'symbol-narrow' }}</td>
+                <td>{{ product.catalogName || 'Unknown' }}</td> <!-- เพิ่มการแสดงชื่อ Catalog -->
                 <td>
-                    <!-- ปุ่มแก้ไข และ ปุ่มลบ -->
                     <button class="btn btn-info btn-sm me-2" (click)="productDetail(product)">
                         <i class="bi bi-eye"></i> Detail
                     </button>
@@ -35,4 +39,14 @@
             </tr>
         </tbody>
     </table>
+
+    <ng-template #noProducts>
+        <div class="alert alert-info text-center">No products found.</div>
+    </ng-template>
+
+    <div *ngIf="loading" class="text-center mt-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 </div>

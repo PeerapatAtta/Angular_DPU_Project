@@ -1,10 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ProductDTO } from '../../dtos/product.dto';
 import { ProductService } from '../../services/product.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { ProductEditDto } from '../../dtos/product-edit.dto';
 
 @Component({
   selector: 'app-product-list',
@@ -13,66 +12,74 @@ import { ProductEditDto } from '../../dtos/product-edit.dto';
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })
+export class ProductListComponent implements OnInit {
 
-export class ProductListComponent {
-
-  //Properies
-  cols!: unknown[];
-  products!: ProductDTO[];
+  products: ProductDTO[] = [];
   loading = false;
+  errorMessage = '';
 
-  //DI
   constructor(
     private productService: ProductService,
     private router: Router
-  ) { }
+  ) {}
 
-  //Methods
   ngOnInit(): void {
-    this.cols = [
-      { field: 'id', header: 'ID' },
-      { field: 'name', header: 'Name' },
-      { field: 'price', header: 'Price' }
-    ];
     this.getProducts();
   }
 
-  //Get products
-  private getProducts() {
-
+  getProducts(): void {
     this.loading = true;
-
     this.productService.getProducts().subscribe({
       next: (res: ProductDTO[]) => {
         this.products = res;
         this.loading = false;
       },
       error: (err: HttpErrorResponse) => {
-        console.error(err.message);
+        console.error('Error fetching products:', err.message);
+        this.errorMessage = 'Failed to load products.';
         this.loading = false;
       }
     });
   }
 
-  productDetail(item: ProductDTO) {
-    console.log('Product Details:', item);
-    this.router.navigate(['/product/' + item.id + '/detail']);
+  productDetail(product: ProductDTO): void {
+    this.router.navigate(['/product', product.id, 'detail']);
   }
 
-  addProduct() {
+  addProduct(): void {
     this.router.navigate(['/product/add']);
   }
 
-  editProduct(item: ProductDTO) {
-    console.log('Product Edit:', item);
-    this.router.navigate(['/product/' + item.id + '/edit']);
+  editProduct(product: ProductDTO): void {
+    this.router.navigate(['/product', product.id, 'edit']);
   }
 
-  deleteProduct(item: ProductDTO) {
-    console.log('Product Delete:', item);
-    this.router.navigate(['/product/' + item.id + '/delete']);
+  deleteProduct(product: ProductDTO): void {
+    if (confirm(`Are you sure you want to delete ${product.name}?`)) {
+      this.productService.deleteProduct(product.id).subscribe({
+        next: () => {
+          this.getProducts(); // Refresh the product list after deletion
+        },
+        error: (err: HttpErrorResponse) => {
+          console.error('Error deleting product:', err.message);
+          this.errorMessage = 'Failed to delete product.';
+        }
+      });
+    }
   }
 
-
-
+  searchProducts(query: string): void {
+    this.loading = true;
+    this.productService.searchProducts(query).subscribe({
+      next: (res: ProductDTO[]) => {
+        this.products = res;
+        this.loading = false;
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error('Error searching products:', err.message);
+        this.errorMessage = 'Failed to search products.';
+        this.loading = false;
+      }
+    });
+  }
 }
