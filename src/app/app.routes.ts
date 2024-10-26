@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { CartComponent } from './components/cart/cart.component';
-import { FavoriteComponent } from './components/favorite/favorite.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { UserComponent } from './components/user/user.component';
 import { ProductListComponent } from './components/product-list/product-list.component';
@@ -21,6 +20,7 @@ import { CategoryEditComponent } from './components/category-edit/category-edit.
 import { CategoryDeleteComponent } from './components/category-delete/category-delete.component';
 import { CategoryListComponent } from './components/category-list/category-list.component';
 import { ForbiddenComponent } from './components/forbidden/forbidden.component';
+import { FavoriteListComponent } from './components/favorite-list/favorite-list.component';
 
 
 export const routes: Routes = [
@@ -102,6 +102,18 @@ export const routes: Routes = [
         ]
     },
     {
+        path: 'favorite',
+        title: 'favorite',
+        children: [
+            {
+                path: 'list',
+                title: 'favorite list',
+                component: FavoriteListComponent,
+                canActivate: [authGuard]
+            },
+        ]
+    },
+    {
         path: 'account',
         children: [
             {
@@ -135,11 +147,6 @@ export const routes: Routes = [
         path: 'cart',
         title: 'Cart',
         component: CartComponent,
-    },
-    {
-        path: 'favorite',
-        title: 'Favorite',
-        component: FavoriteComponent,
     },
     {
         path: 'profile',

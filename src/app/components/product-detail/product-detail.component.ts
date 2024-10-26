@@ -1,56 +1,82 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../services/product.service';
+import { FavoriteService } from '../../services/favorite.service';
 import { ProductDetailDTO } from '../../dtos/product-detail.dto';
 import { CommonModule } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule
-  ],
+  imports: [CommonModule],
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css']
 })
-
 export class ProductDetailComponent implements OnInit {
+
   product!: ProductDetailDTO;
-  errorMessage: string = '';
-  loading: boolean = true;
+  isFavorite = false;
+  loading = false;
+  errorMessage = '';
+  productId!: string;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
     private productService: ProductService,
-  ) {}
+    private favoriteService: FavoriteService,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
+    this.productId = this.route.snapshot.paramMap.get('id')!;
     this.getProductDetail();
+    this.checkIfFavorite(); // เรียกเช็คว่าเป็นรายการโปรดหรือไม่
   }
 
-  // ฟังก์ชันดึงข้อมูลสินค้า
   getProductDetail(): void {
-    const productId = this.route.snapshot.paramMap.get('id'); // ดึง ID จาก URL
+    this.loading = true;
+    this.productService.getProduct(this.productId).subscribe({
+      next: (res: ProductDetailDTO) => {
+        this.product = res;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading product:', error);
+        this.errorMessage = 'Product not found.';
+        this.loading = false;
+      }
+    });
+  }
 
-    if (productId) {
-      this.productService.getProduct(productId).subscribe({
-        next: (res: ProductDetailDTO) => {
-          this.product = res;
-          this.loading = false;
+  checkIfFavorite(): void {
+    this.favoriteService.isFavorite(this.productId).subscribe({
+      next: (res) => {
+        this.isFavorite = res.isFavorite;
+      },
+      error: (error) => {
+        console.error('Error checking favorite status:', error);
+      }
+    });
+  }
+
+  toggleFavorite(): void {
+    if (this.isFavorite) {
+      this.favoriteService.removeFavorite(this.productId).subscribe({
+        next: () => {
+          this.isFavorite = false;
         },
-        error: (err: HttpErrorResponse) => {
-          console.error('Error loading product detail:', err.message);
-          this.errorMessage = 'Product not found.';
-          this.loading = false;
+        error: (error) => {
+          console.error('Error removing favorite:', error);
+        }
+      });
+    } else {
+      this.favoriteService.addFavorite({ productId: this.productId }).subscribe({
+        next: () => {
+          this.isFavorite = true;
+        },
+        error: (error) => {
+          console.error('Error adding favorite:', error);
         }
       });
     }
-  }
-
-  backClick(): void {
-    this.router.navigate(['/product/list']);
   }
 }

@@ -1,0 +1,48 @@
+<div class="container mt-4">
+    <h2>Favorites List</h2>
+
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5>รายการโปรดของคุณ</h5>
+        
+        <!-- ปุ่มลบรายการโปรดทั้งหมด -->
+        <button class="btn btn-danger" (click)="clearFavorites()">
+            <i class="bi bi-trash"></i> ลบรายการโปรดทั้งหมด
+        </button>
+    </div>
+
+    <table class="table table-striped table-hover" *ngIf="favorites.length > 0; else noFavorites">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>ชื่อสินค้า</th>
+                <th>ราคา (THB)</th>
+                <th>การจัดการ</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let favorite of favorites">
+                <td>{{ favorite.productId }}</td>
+                <td>{{ favorite.productName }}</td>
+                <td>{{ favorite.price | currency: 'THB':'symbol-narrow' }}</td>
+                <td>
+                    <!-- ปุ่มลบรายการโปรดเฉพาะรายการ -->
+                    <button class="btn btn-danger btn-sm" (click)="removeFavorite(favorite.productId)">
+                        <i class="bi bi-trash"></i> ลบ
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ng-template #noFavorites>
+        <div class="alert alert-info text-center">ไม่มีสินค้าที่อยู่ในรายการโปรด</div>
+    </ng-template>
+
+    <div *ngIf="loading" class="text-center mt-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+</div>

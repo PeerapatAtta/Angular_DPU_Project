@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
 import { AccountService, authKey } from '../../services/account.service';
 import { ConfirmationService } from 'primeng/api';
 import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../environments/environment.development';
+import { FavoriteService } from '../../services/favorite.service';
 
 @Component({
   selector: 'app-header',
@@ -16,10 +17,11 @@ import { environment } from '../../../environments/environment.development';
   styleUrl: './header.component.css'
 })
 
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
 
   // Properties 
   isUserAuthenticated = false; // to check if the user is authenticated
+  favoriteCount: number = 0; // to store the favorite count
 
 
   // Constructor with dependency injection
@@ -27,11 +29,16 @@ export class HeaderComponent {
     private router: Router, // to navigate to different pages
     private route: ActivatedRoute, // to get the current route
     private accountService: AccountService, // to access account service
-    private confirmService: ConfirmationService // to show confirmation dialog
+    private confirmService: ConfirmationService, // to show confirmation dialog
+    private favoriteService: FavoriteService // to access favorite service
   ) {
     accountService.authChanged.subscribe(res => { // to get the authentication change notification
       this.isUserAuthenticated = res;
     });
+  }
+
+  ngOnInit(): void {
+    this.getFavoriteCount();
   }
 
 
@@ -71,6 +78,17 @@ export class HeaderComponent {
     this.accountService.notifyAuthChange(false); // notify the authentication change
 
     this.router.navigate(['/']);
+  }
+
+  private getFavoriteCount(): void {
+    this.favoriteService.getFavoriteCount().subscribe({
+      next: (res) => {
+        this.favoriteCount = res.count;
+      },
+      error: (error) => {
+        console.error('Error fetching favorite count:', error);
+      }
+    });
   }
 
 }

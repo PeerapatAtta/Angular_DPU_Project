@@ -4,6 +4,7 @@ import { ProductService } from '../../services/product.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { FavoriteService } from '../../services/favorite.service';
 
 @Component({
   selector: 'app-product-list',
@@ -20,7 +21,8 @@ export class ProductListComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
-    private router: Router
+    private router: Router,
+    private favoriteService: FavoriteService,  // Inject FavoriteService
   ) {}
 
   ngOnInit(): void {
@@ -79,6 +81,19 @@ export class ProductListComponent implements OnInit {
         console.error('Error searching products:', err.message);
         this.errorMessage = 'Failed to search products.';
         this.loading = false;
+      }
+    });
+  }
+
+  addToFavorites(product: ProductDTO): void {
+    this.favoriteService.addFavorite({ productId: product.id }).subscribe({
+      next: () => {
+        console.log(`${product.name} added to favorites!`);
+        alert(`${product.name} has been added to your favorites.`);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error adding to favorites:', error);
+        alert('Failed to add to favorites. Please try again.');
       }
     });
   }
