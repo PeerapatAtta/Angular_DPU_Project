@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AccountService, authKey } from '../../services/account.service';
 import { LoginUserDto } from '../../dtos/login-user.dto';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
 // PrimeNG Modules
 import { MessageService } from 'primeng/api';
@@ -22,7 +23,8 @@ import { PasswordModule } from 'primeng/password';
     FloatLabelModule,
     ButtonModule,
     InputTextModule,
-    PasswordModule
+    PasswordModule,
+    CommonModule
   ],
   templateUrl: './account-login-user.component.html',
   styleUrl: './account-login-user.component.css'
@@ -51,8 +53,8 @@ export class AccountLoginUserComponent implements OnInit {
 
     // The loginForm property is initialized with two FormControl instances: email and password.
     this.loginForm = new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.email]), // The email FormControl instance is initialized with the required and email validators.
-      password: new FormControl('', [Validators.required]), // The password FormControl instance is initialized with the required validator.
+      email: new FormControl('seller@email.com', [Validators.required, Validators.email]), // The email FormControl instance is initialized with the required and email validators.
+      password: new FormControl('Password@1234', [Validators.required]), // The password FormControl instance is initialized with the required validator.
     });
 
   }
