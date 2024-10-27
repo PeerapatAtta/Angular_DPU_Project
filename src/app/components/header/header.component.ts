@@ -5,6 +5,8 @@ import { ConfirmationService } from 'primeng/api';
 import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../environments/environment.development';
 import { FavoriteService } from '../../services/favorite.service';
+import { ProductDTO } from '../../dtos/product.dto';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-header',
@@ -18,11 +20,13 @@ import { FavoriteService } from '../../services/favorite.service';
 })
 
 export class HeaderComponent implements OnInit {
+[x: string]: any|string;
 
   // Properties 
   isUserAuthenticated = false; // to check if the user is authenticated
   favoriteCount: number = 0; // to store the favorite count
 
+  userId: string | null = null;
 
   // Constructor with dependency injection
   constructor(
@@ -30,7 +34,9 @@ export class HeaderComponent implements OnInit {
     private route: ActivatedRoute, // to get the current route
     private accountService: AccountService, // to access account service
     private confirmService: ConfirmationService, // to show confirmation dialog
-    private favoriteService: FavoriteService // to access favorite service
+    private favoriteService: FavoriteService, // to access favorite service
+    private userService: UserService,
+    
   ) {
     accountService.authChanged.subscribe(res => { // to get the authentication change notification
       this.isUserAuthenticated = res;
@@ -39,6 +45,8 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.getFavoriteCount();
+    // Load userId when the component initializes
+    this.userId = this['authService'].getLoggedInUserId();
   }
 
 
@@ -90,5 +98,7 @@ export class HeaderComponent implements OnInit {
       }
     });
   }
+
+
 
 }

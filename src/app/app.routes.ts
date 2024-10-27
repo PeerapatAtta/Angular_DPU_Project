@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { UserComponent } from './components/user/user.component';
 import { ProductListComponent } from './components/product-list/product-list.component';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 import { ProductAddComponent } from './components/product-add/product-add.component';
@@ -21,6 +20,8 @@ import { CategoryListComponent } from './components/category-list/category-list.
 import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 import { FavoriteListComponent } from './components/favorite-list/favorite-list.component';
 import { CartListComponent } from './components/cart-list/cart-list.component';
+import { UserListComponent } from './components/user-list/user-list.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 
 export const routes: Routes = [
@@ -152,13 +153,21 @@ export const routes: Routes = [
     },
     {
         path: 'user',
-        title: 'User',
-        component: UserComponent,
-    },
-    {
-        path: 'profile',
-        title: 'Profile',
-        component: ProfileComponent
+        title: 'user',
+        children: [
+            {
+                path: 'list',
+                title: 'user list',
+                component: UserListComponent,
+                canActivate: [authGuard]
+            },
+            {
+                path: 'profile/:id', // เพิ่มการระบุ ID ของผู้ใช้
+                title: 'Profile Detail',
+                component: UserProfileComponent,
+                canActivate: [authGuard]
+            },
+        ]
     },
     {
         path: 'forbidden',

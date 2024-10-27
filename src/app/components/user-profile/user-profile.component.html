@@ -1,0 +1,7 @@
+<div *ngIf="user" class="container mt-4">
+    <h2>User Profile</h2>
+    <p>Name: {{ user.firstName }} {{ user.lastName }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>Role: {{ user.role }}</p>
+</div>
+<div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
