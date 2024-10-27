@@ -1,7 +1,8 @@
 <div class="container mt-4">
     <h2>Edit User Profile</h2>
 
-    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+    <!-- Profile Form -->
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmitProfile()">
         <div class="mb-3">
             <label for="firstName" class="form-label">First Name</label>
             <input type="text" id="firstName" class="form-control" formControlName="firstName">
@@ -16,6 +17,40 @@
         </div>
         <button type="submit" class="btn btn-primary" [disabled]="profileForm.invalid">Save Changes</button>
     </form>
+
+    <!-- Change Role Form -->
+    <div class="mt-5">
+        <h3>Change Role</h3>
+        <form [formGroup]="roleForm" (ngSubmit)="onSubmitRole()">
+            <div class="mb-3">
+                <label for="role" class="form-label">Role</label>
+                <select id="role" class="form-control" formControlName="role">
+                    <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-secondary" [disabled]="roleForm.invalid">Update Role</button>
+        </form>
+    </div>
+
+    <!-- Change Password Form -->
+    <div class="mt-5">
+        <h3>Change Password</h3>
+        <form [formGroup]="passwordForm" (ngSubmit)="onSubmitPassword()">
+            <div class="mb-3">
+                <label for="oldPassword" class="form-label">Old Password</label>
+                <input type="password" id="oldPassword" class="form-control" formControlName="oldPassword">
+            </div>
+            <div class="mb-3">
+                <label for="newPassword" class="form-label">New Password</label>
+                <input type="password" id="newPassword" class="form-control" formControlName="newPassword">
+            </div>
+            <div class="mb-3">
+                <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                <input type="password" id="confirmPassword" class="form-control" formControlName="confirmPassword">
+            </div>
+            <button type="submit" class="btn btn-warning" [disabled]="passwordForm.invalid">Change Password</button>
+        </form>
+    </div>
 
     <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
 </div>

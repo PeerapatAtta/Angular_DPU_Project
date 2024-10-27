@@ -49,7 +49,7 @@
                     <span><a [href]="'/account/forgotpassword?returnUrl=' + returnUrl">Forgot password?</a></span>
                 </div>
                 <div class="col-6 text-right">
-                    <span><a [href]="'/account/register?returnUrl=' + returnUrl">New account?</a></span>
+                    <span><a [routerLink]="['/account/register']" [queryParams]="{ returnUrl: returnUrl }">New account?</a></span>
                 </div>
             </div>
         </ng-template>
