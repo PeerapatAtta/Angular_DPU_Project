@@ -66,6 +66,24 @@ export class UserListComponent implements OnInit {
     }
   }
 
+  suspendUser(user: UserResponseDto): void {
+    if (confirm(`Are you sure you want to suspend ${user.firstName} ${user.lastName}?`)) {
+      this.userService.suspendAccount(user.id).subscribe({
+        next: () => this.getAllUsers(),
+        error: () => (this.errorMessage = 'Error suspending user'),
+      });
+    }
+  }
+
+  unsuspendUser(user: UserResponseDto): void {
+    if (confirm(`Are you sure you want to unsuspend ${user.firstName} ${user.lastName}?`)) {
+      this.userService.unsuspendAccount(user.id).subscribe({
+        next: () => this.getAllUsers(),
+        error: () => (this.errorMessage = 'Error unsuspending user'),
+      });
+    }
+  }
+
   addUser(): void {
     this.router.navigate(['/user/add']);
   }
