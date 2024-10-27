@@ -7,6 +7,7 @@ import { environment } from '../../../environments/environment.development';
 import { FavoriteService } from '../../services/favorite.service';
 import { ProductDTO } from '../../dtos/product.dto';
 import { UserService } from '../../services/user.service';
+import { UserResponseDto } from '../../dtos/user-response-dto';
 
 @Component({
   selector: 'app-header',
@@ -25,8 +26,11 @@ export class HeaderComponent implements OnInit {
   // Properties 
   isUserAuthenticated = false; // to check if the user is authenticated
   favoriteCount: number = 0; // to store the favorite count
+  userId!: string; // เพิ่มตัวแปร userId
 
-  userId: string | null = null;
+  // id: string = '1ff3a5ca-9969-4452-b6ec-7c0508171675'; // to store the user id
+
+  // user!: UserResponseDto; // to store the user object
 
   // Constructor with dependency injection
   constructor(
@@ -44,10 +48,11 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getFavoriteCount();
-    // Load userId when the component initializes
-    this.userId = this['authService'].getLoggedInUserId();
+    this.getFavoriteCount();   
+    this.userId = this.userService.getUserIdFromToken()!; // เรียกใช้เมธอด getUserIdFromToken จาก UserService 
+    console.log('User ID:', this.userId);
   }
+
 
 
   // Method to navigate to login page
@@ -98,6 +103,20 @@ export class HeaderComponent implements OnInit {
       }
     });
   }
+
+ 
+
+  // goProfile2(): void {
+  //   console.log("User ID:", this.id);
+  //   this.router.navigate(['/user', this.id, 'detail']);
+  // }
+
+  goToProfile(): void {
+    console.log('User ID:', this.userId);
+    this.router.navigate(['/user', this.userId,'detail']); // ส่ง userId ไปที่หน้าโปรไฟล์
+  }
+
+  
 
 
 

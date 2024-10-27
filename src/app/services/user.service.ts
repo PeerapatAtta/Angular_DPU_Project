@@ -6,6 +6,8 @@ import { UserResponseDto } from '../dtos/user-response-dto';
 import { UpdateUserProfileDto } from '../dtos/update-user-profile-dto';
 import { ChangeUserRoleDto } from '../dtos/change-user-role-dto';
 import { ChangePasswordDto } from '../dtos/change-password-dto';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { authKey } from '../services/account.service'; // Key for token storage
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,19 @@ import { ChangePasswordDto } from '../dtos/change-password-dto';
 export class UserService {
   private baseUrl = `${environment.apiBaseUrl}/users`;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private jwtHelper: JwtHelperService) { }
+
+  // Method to get the user ID from the JWT token
+  getUserIdFromToken(): string | null {
+    const token = localStorage.getItem(authKey.accessToken);
+    if (token && !this.jwtHelper.isTokenExpired(token)) {
+      const decodedToken = this.jwtHelper.decodeToken(token);
+      return decodedToken.sub || null;
+    }
+    return null;
+  }
 
   // Get all users
   getAllUsers(): Observable<UserResponseDto[]> {
@@ -21,8 +35,9 @@ export class UserService {
   }
 
   // Get user profile by ID
-  getUserProfile(userId: string): Observable<UserResponseDto> {
-    return this.http.get<UserResponseDto>(`${this.baseUrl}/profile/${userId}`);
+  getUserProfile(id: string): Observable<UserResponseDto> {
+    let reqUrl = environment.apiBaseUrl + '/users/Profile/' + id;
+    return this.http.get<UserResponseDto>(reqUrl);
   }
 
   // Update user profile

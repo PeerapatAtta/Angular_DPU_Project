@@ -22,6 +22,7 @@ import { FavoriteListComponent } from './components/favorite-list/favorite-list.
 import { CartListComponent } from './components/cart-list/cart-list.component';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { UserEditProfileComponent } from './components/user-edit-profile/user-edit-profile.component';
 
 
 export const routes: Routes = [
@@ -162,9 +163,15 @@ export const routes: Routes = [
                 canActivate: [authGuard]
             },
             {
-                path: 'profile/:id', // เพิ่มการระบุ ID ของผู้ใช้
-                title: 'Profile Detail',
+                path: ':id/detail',
+                title: 'User Detail',
                 component: UserProfileComponent,
+                canActivate: [authGuard]
+            },
+            {
+                path: ':id/edit',
+                title: 'User edit',
+                component: UserEditProfileComponent,
                 canActivate: [authGuard]
             },
         ]

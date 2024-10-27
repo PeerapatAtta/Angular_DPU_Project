@@ -23,7 +23,7 @@ export class ProductService {
 
   // Get a product by ID
   getProduct(id: string): Observable<ProductDetailDTO> {
-    return this.http.get<ProductDetailDTO>(`${this.baseUrl}/${id}`);
+    return this.http.get<ProductDetailDTO>(`${this.baseUrl}/${id}`); 
   }
 
   // Add a new product

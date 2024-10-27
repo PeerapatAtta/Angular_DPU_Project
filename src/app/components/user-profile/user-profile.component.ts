@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/user.service';
 import { UserResponseDto } from '../../dtos/user-response-dto';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 @Component({
@@ -13,13 +13,17 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class UserProfileComponent implements OnInit {
 
+
+
   user!: UserResponseDto;
   errorMessage = '';
   userId!: string; // เพิ่มตัวแปร userId
+  id: string = '1ff3a5ca-9969-4452-b6ec-7c0508171675';
 
   constructor(
     private userService: UserService,
     private route: ActivatedRoute,
+    private router: Router, 
   ) { }
 
   ngOnInit(): void {
@@ -41,4 +45,15 @@ export class UserProfileComponent implements OnInit {
       }
     });
   }
+
+  goToEditProfile(id:string): void {
+    this.router.navigate(['/user', id, 'edit']);
+    }
+
+    goProfile(): void {
+      console.log("User ID:", this.id);
+      this.router.navigate(['/user', this.id, 'edit']);
+    }
+
+
 }

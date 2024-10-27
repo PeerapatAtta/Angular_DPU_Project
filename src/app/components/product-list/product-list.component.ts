@@ -35,7 +35,7 @@ export class ProductListComponent implements OnInit {
     this.loading = true;
     this.productService.getProducts().subscribe({
       next: (res: ProductDTO[]) => {
-        this.products = res;
+        this.products = res;  
         this.loading = false;
       },
       error: (err: HttpErrorResponse) => {

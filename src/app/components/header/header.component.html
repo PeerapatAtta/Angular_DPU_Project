@@ -38,9 +38,9 @@
                 </a>
 
                 @if (isUserAuthenticated) {
-                    <!-- <a [routerLink]="['/user/profile', userId]" class="btn btn-primary mx-2">
+                    <a  class="btn btn-primary mx-2" (click)="goToProfile()">
                         <i class="bi bi-person-circle"></i> Profile
-                    </a> -->
+                    </a>
                                    
                     <button type="button" class="btn btn-danger mx-2" (click)="logout()">Logout</button>
                 }
