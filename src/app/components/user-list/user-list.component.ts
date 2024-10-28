@@ -10,12 +10,13 @@ import { Router } from '@angular/router';
   imports: [CommonModule],
   templateUrl: './user-list.component.html',
 })
+
 export class UserListComponent implements OnInit {
   users: UserResponseDto[] = [];
   errorMessage = '';
   loading = false;
 
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
     this.getAllUsers();
@@ -53,10 +54,6 @@ export class UserListComponent implements OnInit {
     this.router.navigate([`/user/profile`, user.id]);
   }
 
-  editUser(user: UserResponseDto): void {
-    this.router.navigate([`/user/edit`, user.id]);
-  }
-
   deleteUser(user: UserResponseDto): void {
     if (confirm(`Are you sure you want to delete ${user.firstName} ${user.lastName}?`)) {
       this.userService.deleteUserProfile(user.id).subscribe({
@@ -69,7 +66,11 @@ export class UserListComponent implements OnInit {
   suspendUser(user: UserResponseDto): void {
     if (confirm(`Are you sure you want to suspend ${user.firstName} ${user.lastName}?`)) {
       this.userService.suspendAccount(user.id).subscribe({
-        next: () => this.getAllUsers(),
+        next: () => {
+          console.log('User suspended: ', user.isSuspended);
+          // user.isSuspended = true; // อัปเดตสถานะผู้ใช้เป็น suspended
+          this.getAllUsers(); // รีเฟรชข้อมูลผู้ใช้ทั้งหมด
+        },
         error: () => (this.errorMessage = 'Error suspending user'),
       });
     }
@@ -78,7 +79,11 @@ export class UserListComponent implements OnInit {
   unsuspendUser(user: UserResponseDto): void {
     if (confirm(`Are you sure you want to unsuspend ${user.firstName} ${user.lastName}?`)) {
       this.userService.unsuspendAccount(user.id).subscribe({
-        next: () => this.getAllUsers(),
+        next: () => {
+          console.log('User suspended: ', user.isSuspended);
+          this.getAllUsers(); // รีเฟรชข้อมูลผู้ใช้ทั้งหมด
+          // user.isSuspended = false; // อัปเดตสถานะผู้ใช้เป็น active
+        },
         error: () => (this.errorMessage = 'Error unsuspending user'),
       });
     }

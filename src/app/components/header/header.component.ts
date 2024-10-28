@@ -21,16 +21,12 @@ import { UserResponseDto } from '../../dtos/user-response-dto';
 })
 
 export class HeaderComponent implements OnInit {
-[x: string]: any|string;
-
-  // Properties 
+  
+  // Properties
+  [x: string]: any | string;
   isUserAuthenticated = false; // to check if the user is authenticated
   favoriteCount: number = 0; // to store the favorite count
   userId!: string; // เพิ่มตัวแปร userId
-
-  // id: string = '1ff3a5ca-9969-4452-b6ec-7c0508171675'; // to store the user id
-
-  // user!: UserResponseDto; // to store the user object
 
   // Constructor with dependency injection
   constructor(
@@ -40,17 +36,31 @@ export class HeaderComponent implements OnInit {
     private confirmService: ConfirmationService, // to show confirmation dialog
     private favoriteService: FavoriteService, // to access favorite service
     private userService: UserService,
-    
+
   ) {
+
+    // Subscribe เพื่อตรวจสอบการเข้าสู่ระบบ และอัปเดต isUserAuthenticated แบบเรียลไทม์
     accountService.authChanged.subscribe(res => { // to get the authentication change notification
       this.isUserAuthenticated = res;
+      // set the favorite count to 0 if the user is not authenticated else get the favorite count
+      if (!this.isUserAuthenticated) {
+        this.favoriteCount = 0;
+      } else {
+        this.favoriteService.updateFavoriteCount(); // เรียก updateFavoriteCount() เมื่อมีการเข้าสู่ระบบ
+      }
+  
     });
+
+    // Subscribe เพื่ออัปเดต favoriteCount แบบเรียลไทม์
+    this.favoriteService.favoriteCountChanges$.subscribe(count => {
+      this.favoriteCount = count;
+    });
+
+    // this.getFavoriteCount()
   }
 
   ngOnInit(): void {
-    this.getFavoriteCount();   
-    this.userId = this.userService.getUserIdFromToken()!; // เรียกใช้เมธอด getUserIdFromToken จาก UserService 
-    console.log('User ID:', this.userId);
+
   }
 
 
@@ -93,31 +103,11 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-  private getFavoriteCount(): void {
-    this.favoriteService.getFavoriteCount().subscribe({
-      next: (res) => {
-        this.favoriteCount = res.count;
-      },
-      error: (error) => {
-        console.error('Error fetching favorite count:', error);
-      }
-    });
-  }
-
- 
-
-  // goProfile2(): void {
-  //   console.log("User ID:", this.id);
-  //   this.router.navigate(['/user', this.id, 'detail']);
-  // }
-
+  // Method to navigate to profile page
   goToProfile(): void {
+    this.userId = this.userService.getUserIdFromToken()!; 
     console.log('User ID:', this.userId);
-    this.router.navigate(['/user', this.userId,'detail']); // ส่ง userId ไปที่หน้าโปรไฟล์
+    this.router.navigate(['/user', this.userId, 'detail']); // ส่ง userId ไปที่หน้าโปรไฟล์
   }
-
-  
-
-
 
 }

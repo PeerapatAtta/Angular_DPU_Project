@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FavoriteService } from '../../services/favorite.service';
 import { CartService } from '../../services/cart.service';
+import { FavoriteProductDTO } from '../../dtos/favorite-product-dto';
 
 @Component({
   selector: 'app-product-list',
@@ -17,6 +18,7 @@ import { CartService } from '../../services/cart.service';
 export class ProductListComponent implements OnInit {
 
   products: ProductDTO[] = [];
+  favoriteProducts: FavoriteProductDTO[] = []; // เก็บรายการ Favorite ปัจจุบันของผู้ใช้
   loading = false;
   errorMessage = '';
 
@@ -29,13 +31,14 @@ export class ProductListComponent implements OnInit {
 
   ngOnInit(): void {
     this.getProducts();
+    this.getFavoriteProducts(); // ดึงรายการ Favorite
   }
 
   getProducts(): void {
     this.loading = true;
     this.productService.getProducts().subscribe({
       next: (res: ProductDTO[]) => {
-        this.products = res;  
+        this.products = res;
         this.loading = false;
       },
       error: (err: HttpErrorResponse) => {
@@ -87,18 +90,40 @@ export class ProductListComponent implements OnInit {
     });
   }
 
-  addToFavorites(product: ProductDTO): void {
-    this.favoriteService.addFavorite({ productId: product.id }).subscribe({
-      next: () => {
-        console.log(`${product.name} added to favorites!`);
-        alert(`${product.name} has been added to your favorites.`);
+  getFavoriteProducts(): void {
+    this.favoriteService.getFavorites().subscribe({
+      next: (favorites: FavoriteProductDTO[]) => {
+        this.favoriteProducts = favorites; // เก็บรายการ Favorite ที่ผู้ใช้มีอยู่แล้ว
       },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error adding to favorites:', error);
-        alert('Failed to add to favorites. Please try again.');
+      error: (err: HttpErrorResponse) => {
+        console.error('Error loading favorites:', err.message);
+        this.errorMessage = 'Failed to load favorites.';
       }
     });
   }
+
+  addToFavorites(product: ProductDTO): void {
+    // ตรวจสอบว่าสินค้าถูกเพิ่มไปใน Favorite แล้วหรือยัง
+    const isAlreadyFavorite = this.favoriteProducts.some(fav => fav.productId === product.id);
+
+    if (isAlreadyFavorite) {
+      alert(`${product.name} is already in your favorites.`);
+    } else {
+      // ถ้ายังไม่ถูกเพิ่มอยู่แล้ว ให้เพิ่มสินค้าลงในรายการ Favorite
+      this.favoriteService.addFavorite({ productId: product.id }).subscribe({
+        next: () => {
+          console.log(`${product.name} added to favorites!`);
+          alert(`${product.name} has been added to your favorites.`);
+          this.getFavoriteProducts(); // อัปเดตรายการ Favorite หลังจากเพิ่มสำเร็จ
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error adding to favorites:', error);
+          alert('Failed to add to favorites. Please try again.');
+        }
+      });
+    }
+  }
+
 
   addToCart(product: ProductDTO): void {
     this.cartService.addToCart({ productId: product.id, quantity: 1 }).subscribe({

@@ -5,11 +5,12 @@ import { RegisterUserDto } from '../dtos/register-user.dto';
 import { environment } from '../../environments/environment.development';
 import { LoginUserDto } from '../dtos/login-user.dto';
 import { TokenResultDto } from '../dtos/token-result.dto';
-import { firstValueFrom, Subject } from 'rxjs';
+import { firstValueFrom, Subject, tap } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { RefreshTokenDto } from '../dtos/refresh-token.dto';
 import { ForgotPasswordDTO } from '../dtos/forgot-password.dto';
 import { ResetPasswordDto } from '../dtos/reset-password.dto';
+import { FavoriteService } from './favorite.service';
 
 // Key for storing access token and refresh token in local storage
 export const authKey = {
@@ -30,7 +31,8 @@ export class AccountService {
   // Constructor with dependency injection
   constructor(
     private http: HttpClient,
-    private jwtHelperService: JwtHelperService // JwtHelperService คือ service ที่ใช้สำหรับ decode หรือ encode jwt token
+    private jwtHelperService: JwtHelperService, // JwtHelperService คือ service ที่ใช้สำหรับ decode หรือ encode jwt token
+    private favoriteService: FavoriteService,
   ) { }
 
   // Register a new user 
@@ -41,13 +43,25 @@ export class AccountService {
 
   // Define the login method to send a POST request to the server to login the user and return the token result object 
   login(request: LoginUserDto) {
-    let reqUrl = environment.apiBaseUrl + '/accounts/login'; // Define the request URL
-    return this.http.post<TokenResultDto>(reqUrl, request); // Send a POST request to the server
+    let reqUrl = environment.apiBaseUrl + '/accounts/login';
+    return this.http.post<TokenResultDto>(reqUrl, request).pipe(
+      tap(() => {
+        this.favoriteService.updateFavoriteCount(); // อัปเดตจำนวน Favorite หลังจาก Login
+        this.notifyAuthChange(true);
+      })
+    );
   }
 
   logout() {
     let reqUrl = environment.apiBaseUrl + '/accounts/token/revoke';
-    return this.http.post<unknown>(reqUrl, {});
+    return this.http.post<unknown>(reqUrl, {}).pipe(
+      tap(() => {
+        localStorage.removeItem(authKey.accessToken);
+        localStorage.removeItem(authKey.refreshToken);
+        this.favoriteService.updateFavoriteCount(); // อัปเดตจำนวน Favorite หลังจาก Logout
+        this.notifyAuthChange(false);
+      })
+    );
   }
 
   // Refresh token method to get new access token and refresh token

@@ -8,6 +8,7 @@ import { AccountService } from './services/account.service';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService, PrimeNGConfig } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { FavoriteService } from './services/favorite.service';
 
 @Component({
   selector: 'app-root',
@@ -35,7 +36,8 @@ export class AppComponent implements OnInit {
   // Constructor with dependency injection
   constructor(
     private primengConfig: PrimeNGConfig, // Inject the PrimeNGConfig service to enable the ripple effect globally
-    private accountService: AccountService // Inject the AccountService to check if the user is authenticated
+    private accountService: AccountService,// Inject the AccountService to check if the user is authenticated
+    private favoriteService: FavoriteService,
   ) { }
 
   async ngOnInit() {
@@ -45,5 +47,7 @@ export class AppComponent implements OnInit {
     const res = await this.accountService.isUserAuthenticated(); // Check if the user is authenticated
 
     this.accountService.notifyAuthChange(res); // Notify the app component of the authentication status
+
+    this.favoriteService.updateFavoriteCount(); // Call updateFavoriteCount() when the app starts
   }
 }

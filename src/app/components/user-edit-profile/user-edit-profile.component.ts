@@ -23,7 +23,7 @@ export class UserEditProfileComponent implements OnInit {
   passwordForm!: FormGroup;
   userId!: string;
   errorMessage = '';
-  roles = ['User', 'Admin', 'Manager']; // Define available roles
+  roles = ['Seller', 'Customer']; // Define available roles
 
   constructor(
     private fb: FormBuilder,
