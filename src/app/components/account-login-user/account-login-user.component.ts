@@ -54,8 +54,8 @@ export class AccountLoginUserComponent implements OnInit {
 
     // The loginForm property is initialized with two FormControl instances: email and password.
     this.loginForm = new FormGroup({
-      email: new FormControl('seller@email.com', [Validators.required, Validators.email]), // The email FormControl instance is initialized with the required and email validators.
-      password: new FormControl('Password@1234', [Validators.required]), // The password FormControl instance is initialized with the required validator.
+      email: new FormControl('', [Validators.required, Validators.email]), // The email FormControl instance is initialized with the required and email validators.
+      password: new FormControl('', [Validators.required]), // The password FormControl instance is initialized with the required validator.
     });
 
   }

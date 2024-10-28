@@ -13,7 +13,9 @@ import { FormsModule } from '@angular/forms';
   ],
   templateUrl: './cart-list.component.html',
 })
+
 export class CartListComponent implements OnInit {
+  
   cartItems: CartItemDTO[] = [];
   errorMessage = '';
   totalAmount: number = 0; // Property to store total amount

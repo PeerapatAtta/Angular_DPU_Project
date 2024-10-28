@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { FavoriteService } from '../../services/favorite.service';
 import { CartService } from '../../services/cart.service';
 import { FavoriteProductDTO } from '../../dtos/favorite-product-dto';
+import { CartItemDTO } from '../../dtos/cart-item-dto';
 
 @Component({
   selector: 'app-product-list',
@@ -15,10 +16,12 @@ import { FavoriteProductDTO } from '../../dtos/favorite-product-dto';
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })
+
 export class ProductListComponent implements OnInit {
 
   products: ProductDTO[] = [];
   favoriteProducts: FavoriteProductDTO[] = []; // เก็บรายการ Favorite ปัจจุบันของผู้ใช้
+  cartItems: CartItemDTO[] = []; // รายการสินค้าในตะกร้าปัจจุบันของผู้ใช้
   loading = false;
   errorMessage = '';
 
@@ -32,6 +35,7 @@ export class ProductListComponent implements OnInit {
   ngOnInit(): void {
     this.getProducts();
     this.getFavoriteProducts(); // ดึงรายการ Favorite
+    this.getCartItems(); // ดึงข้อมูลสินค้าในตะกร้า
   }
 
   getProducts(): void {
@@ -124,12 +128,47 @@ export class ProductListComponent implements OnInit {
     }
   }
 
+  getCartItems(): void {
+    this.cartService.getCartItems().subscribe({
+      next: (items) => {
+        this.cartItems = items; // เก็บรายการสินค้าในตะกร้าปัจจุบัน
+      },
+      error: () => (this.errorMessage = 'Error loading cart items'),
+    });
+  }
 
   addToCart(product: ProductDTO): void {
-    this.cartService.addToCart({ productId: product.id, quantity: 1 }).subscribe({
-      next: () => console.log('Added to cart successfully!'),
-      error: (err) => console.error('Error adding to cart:', err)
-    });
+    // ตรวจสอบว่าสินค้าตัวนี้มีอยู่ในตะกร้าแล้วหรือไม่
+    const cartItem = this.cartItems.find(item => item.productId === product.id);
+    
+    if (cartItem) {
+      // ถ้ามีสินค้าอยู่แล้ว ให้เพิ่มจำนวนสินค้า
+      const newQuantity = cartItem.quantity + 1;
+      this.cartService.updateCartItem(cartItem.productId, { quantity: newQuantity }).subscribe({
+        next: () => {
+          cartItem.quantity = newQuantity; // อัปเดตจำนวนสินค้าในตะกร้าปัจจุบัน
+          console.log(`${product.name} quantity updated in the cart!`);
+          alert(`${product.name} quantity has been increased in your cart.`);
+        },
+        error: (err) => {
+          console.error('Error updating cart item quantity:', err);
+          alert('Failed to update cart. Please try again.');
+        }
+      });
+    } else {
+      // ถ้าไม่มีสินค้าในตะกร้า ให้เพิ่มสินค้าชิ้นใหม่ลงในตะกร้า
+      this.cartService.addToCart({ productId: product.id, quantity: 1 }).subscribe({
+        next: () => {
+          console.log(`${product.name} added to cart!`);
+          alert(`${product.name} has been added to your cart.`);
+          this.getCartItems(); // อัปเดตรายการสินค้าในตะกร้าหลังเพิ่มสินค้าใหม่
+        },
+        error: (err) => {
+          console.error('Error adding to cart:', err);
+          alert('Failed to add to cart. Please try again.');
+        }
+      });
+    }
   }
 
 }
